@@ -10,7 +10,7 @@ function ReviewResult({ result }) {
         <strong>{result.score} / 10</strong>
       </div>
 
-      <h3>Feedback:</h3>
+      <h3>Wynik</h3>
       <p>{result.feedback}</p>
 
       <h3>Porównanie:</h3>

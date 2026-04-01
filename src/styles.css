@@ -238,6 +238,34 @@ button:disabled {
   color: #2b6cb0;
 }
 
+.analysis-summary {
+  background: linear-gradient(135deg, #ebf8ff 0%, #e6fffa 100%);
+  border: 1px solid #90cdf4;
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+
+.analysis-summary h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  color: #2c5282;
+  font-size: 1.05rem;
+}
+
+.analysis-summary p {
+  margin: 0;
+  color: #2d3748;
+  line-height: 1.55;
+}
+
+.analysis-empty {
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
 .issue {
   border-left: 4px solid #fc8181;
   padding: 12px;
