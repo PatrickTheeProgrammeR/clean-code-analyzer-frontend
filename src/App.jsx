@@ -12,28 +12,67 @@ function App() {
   const [originalCode, setOriginalCode] = useState('')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [isReviewing, setIsReviewing] = useState(false)
+  const [analysisError, setAnalysisError] = useState(null)
+  const [reviewError, setReviewError] = useState(null)
 
   async function handleAnalyze(code) {
-    setIsAnalyzing(true)
+    setAnalysisError(null)
+    setReviewError(null)
     setAnalysis(null)
     setReview(null)
-    const result = await analyzeCode(code)
-    setOriginalCode(code)
-    setAnalysis(result)
-    setIsAnalyzing(false)
+    setIsAnalyzing(true)
+    try {
+      const result = await analyzeCode(code)
+      setOriginalCode(code)
+      setAnalysis(result)
+    } catch (e) {
+      const timedOut =
+        e?.name === 'TimeoutError' ||
+        e?.name === 'AbortError' ||
+        (e instanceof Error && e.message.includes('aborted'))
+      const message = timedOut
+        ? 'Przekroczono limit czasu oczekiwania (2 min). Skróć fragment kodu lub spróbuj ponownie później.'
+        : e instanceof Error
+          ? e.message
+          : 'Nie udało się przeprowadzić analizy.'
+      setAnalysisError(message)
+    } finally {
+      setIsAnalyzing(false)
+    }
   }
 
   async function handleReview(original, fix) {
+    setReviewError(null)
     setIsReviewing(true)
-    const result = await reviewUserFix(original, fix)
-    setReview(result)
-    setIsReviewing(false)
+    try {
+      const result = await reviewUserFix(original, fix)
+      setReview(result)
+    } catch (e) {
+      const timedOut =
+        e?.name === 'TimeoutError' ||
+        e?.name === 'AbortError' ||
+        (e instanceof Error && e.message.includes('aborted'))
+      const message = timedOut
+        ? 'Przekroczono limit czasu oczekiwania (2 min). Spróbuj ponownie później.'
+        : e instanceof Error
+          ? e.message
+          : 'Nie udało się ocenić poprawki.'
+      setReviewError(message)
+    } finally {
+      setIsReviewing(false)
+    }
   }
 
   return (
     <div className="container">
       <h1>Clean Code Analyzer</h1>
       <p className="subtitle">Analizuj swój kod Python pod kątem zasad Clean Code</p>
+
+      {analysisError ? (
+        <div className="banner-error" role="alert">
+          {analysisError}
+        </div>
+      ) : null}
 
       <CodeInput onAnalyze={handleAnalyze} isLoading={isAnalyzing} />
 
@@ -42,11 +81,18 @@ function App() {
       )}
 
       {analysis && (
-        <FixInput
-          originalCode={originalCode}
-          onReview={handleReview}
-          isLoading={isReviewing}
-        />
+        <>
+          {reviewError ? (
+            <div className="banner-error" role="alert">
+              {reviewError}
+            </div>
+          ) : null}
+          <FixInput
+            originalCode={originalCode}
+            onReview={handleReview}
+            isLoading={isReviewing}
+          />
+        </>
       )}
 
       {review && (

@@ -12,7 +12,7 @@ body {
 }
 
 .container {
-  max-width: 800px;
+  max-width: 960px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -26,6 +26,17 @@ h1 {
 .subtitle {
   color: #666;
   margin-bottom: 24px;
+}
+
+.banner-error {
+  background: #fff5f5;
+  border: 1px solid #fc8181;
+  color: #9b2c2c;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+  line-height: 1.45;
 }
 
 .card {
@@ -47,6 +58,140 @@ h1 {
   margin-top: 16px;
   margin-bottom: 8px;
   color: #444;
+}
+
+.card-hint {
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+
+.card-hint code {
+  font-size: 0.88em;
+  background: #e8eef5;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #2c5282;
+}
+
+.code-input-card .code-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.github-fetch {
+  display: flex;
+  flex: 1;
+  min-width: 240px;
+  gap: 8px;
+  align-items: center;
+}
+
+.github-url-input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+.github-url-input:focus {
+  outline: none;
+  border-color: #2b6cb0;
+  box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.2);
+}
+
+.btn-secondary {
+  background: #edf2f7;
+  color: #2d3748;
+  border: 1px solid #cbd5e1;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-secondary:hover {
+  background: #e2e8f0;
+  border-color: #a0aec0;
+}
+
+.btn-github {
+  background: #24292f;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-github:hover:not(:disabled) {
+  background: #424a53;
+}
+
+.btn-github:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.inline-error {
+  background: #fff5f5;
+  border: 1px solid #feb2b2;
+  color: #c53030;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+}
+
+.editor-shell {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #1e293b;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.12);
+  margin-bottom: 16px;
+}
+
+.editor-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 420px;
+  background: #1e1e1e;
+  color: #94a3b8;
+  font-size: 0.95rem;
+}
+
+.editor-loading-sm {
+  height: 360px;
+}
+
+.code-actions {
+  display: flex;
+  justify-content: flex-end;
 }
 
 textarea {
