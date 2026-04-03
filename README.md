@@ -9,9 +9,8 @@
    - Root directory: `clean-code-analyzer-frontend`
    - Build command: `npm run build`
    - Output directory: `dist`
-4. Ustaw zmienna srodowiskowa w Vercel:
-   - `VITE_API_URL=https://<twoj-render-url>/api`
-5. Wdroz aplikacje.
+4. **Obowiazkowo** zmienna `VITE_API_URL` = `https://<render>/api` (bez tego produkcja probuje laczyc z localhost).
+5. Wdroz (po zmianie env zawsze Redeploy).
 
 ## Przeplyw klucza OpenAI API
 

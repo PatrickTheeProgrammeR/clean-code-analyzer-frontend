@@ -3,7 +3,7 @@ import CodeInput from './components/CodeInput'
 import AnalysisResult from './components/AnalysisResult'
 import FixInput from './components/FixInput'
 import ReviewResult from './components/ReviewResult'
-import { analyzeCode, reviewUserFix } from './services/api'
+import { analyzeCode, reviewUserFix, isBackendConfigured } from './services/api'
 import './styles.css'
 
 function App() {
@@ -69,6 +69,13 @@ function App() {
     <div className="container">
       <h1>Clean Code Analyzer</h1>
       <p className="subtitle">Analizuj swój kod Python pod kątem zasad Clean Code</p>
+
+      {import.meta.env.PROD && !isBackendConfigured() ? (
+        <div className="banner-error" role="alert">
+          Brak zmiennej <code>VITE_API_URL</code> przy buildzie. W Vercel ustaw adres backendu (np.{' '}
+          <code>https://twoj-backend.onrender.com/api</code>) i wykonaj Redeploy.
+        </div>
+      ) : null}
 
       {analysisError ? (
         <div className="banner-error" role="alert">

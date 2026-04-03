@@ -1,6 +1,26 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
+function normalizeApiBase(raw) {
+  const s = (raw ?? '').trim()
+  if (!s) {
+    if (import.meta.env.PROD) return null
+    return 'http://localhost:8000/api'
+  }
+  const noTrailing = s.replace(/\/+$/, '')
+  if (noTrailing.endsWith('/api')) return noTrailing
+  return `${noTrailing}/api`
+}
+
+const API_URL = normalizeApiBase(import.meta.env.VITE_API_URL)
 
 const AI_REQUEST_MS = 120_000
+const GITHUB_FETCH_MS = 60_000
+
+function requireApiUrl() {
+  if (!API_URL) {
+    throw new Error(
+      'Brak VITE_API_URL. W Vercel → Environment Variables ustaw https://twoj-backend.onrender.com/api i Redeploy.'
+    )
+  }
+}
 
 function errorMessageFromBody(data) {
   const detail = data?.detail
@@ -13,8 +33,26 @@ function errorMessageFromBody(data) {
   return null
 }
 
+async function fetchApi(path, init) {
+  requireApiUrl()
+  try {
+    return await fetch(`${API_URL}${path}`, init)
+  } catch (e) {
+    if (e instanceof TypeError) {
+      throw new Error(
+        'Brak połączenia z backendem (Render). Sprawdź VITE_API_URL i /api/health.'
+      )
+    }
+    throw e
+  }
+}
+
+export function isBackendConfigured() {
+  return Boolean(API_URL)
+}
+
 export async function analyzeCode(code, apiKey) {
-  const response = await fetch(`${API_URL}/analyze-code`, {
+  const response = await fetchApi('/analyze-code', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ code, api_key: apiKey }),
@@ -30,7 +68,7 @@ export async function analyzeCode(code, apiKey) {
 }
 
 export async function reviewUserFix(originalCode, userFix, apiKey) {
-  const response = await fetch(`${API_URL}/review-user-fix`, {
+  const response = await fetchApi('/review-user-fix', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ original_code: originalCode, user_fix: userFix, api_key: apiKey }),
@@ -46,10 +84,11 @@ export async function reviewUserFix(originalCode, userFix, apiKey) {
 }
 
 export async function fetchGithubCode(url) {
-  const response = await fetch(`${API_URL}/fetch-github`, {
+  const response = await fetchApi('/fetch-github', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ url })
+    body: JSON.stringify({ url }),
+    signal: AbortSignal.timeout(GITHUB_FETCH_MS)
   })
   const data = await response.json().catch(() => ({}))
   if (!response.ok) {
