@@ -75,6 +75,24 @@ h1 {
   color: #2c5282;
 }
 
+.api-key-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  background: #f8fafc;
+  color: #1e293b;
+  margin-bottom: 12px;
+}
+
+.api-key-input:focus {
+  outline: none;
+  border-color: #2b6cb0;
+  box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.2);
+}
+
 .code-input-card .code-toolbar {
   display: flex;
   flex-wrap: wrap;

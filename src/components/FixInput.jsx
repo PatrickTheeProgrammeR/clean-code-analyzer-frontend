@@ -14,12 +14,12 @@ const EDITOR_OPTIONS = {
   renderLineHighlight: 'line',
 }
 
-function FixInput({ originalCode, onReview, isLoading }) {
+function FixInput({ originalCode, apiKey, onReview, isLoading }) {
   const [userFix, setUserFix] = useState('')
 
   function handleSubmit() {
     if (userFix.trim()) {
-      onReview(originalCode, userFix)
+      onReview(originalCode, userFix, apiKey)
     }
   }
 

@@ -10,19 +10,21 @@ function App() {
   const [analysis, setAnalysis] = useState(null)
   const [review, setReview] = useState(null)
   const [originalCode, setOriginalCode] = useState('')
+  const [activeApiKey, setActiveApiKey] = useState('')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [isReviewing, setIsReviewing] = useState(false)
   const [analysisError, setAnalysisError] = useState(null)
   const [reviewError, setReviewError] = useState(null)
 
-  async function handleAnalyze(code) {
+  async function handleAnalyze(code, apiKey) {
     setAnalysisError(null)
     setReviewError(null)
     setAnalysis(null)
     setReview(null)
     setIsAnalyzing(true)
+    setActiveApiKey(apiKey)
     try {
-      const result = await analyzeCode(code)
+      const result = await analyzeCode(code, apiKey)
       setOriginalCode(code)
       setAnalysis(result)
     } catch (e) {
@@ -41,11 +43,11 @@ function App() {
     }
   }
 
-  async function handleReview(original, fix) {
+  async function handleReview(original, fix, apiKey) {
     setReviewError(null)
     setIsReviewing(true)
     try {
-      const result = await reviewUserFix(original, fix)
+      const result = await reviewUserFix(original, fix, apiKey)
       setReview(result)
     } catch (e) {
       const timedOut =
@@ -89,6 +91,7 @@ function App() {
           ) : null}
           <FixInput
             originalCode={originalCode}
+            apiKey={activeApiKey}
             onReview={handleReview}
             isLoading={isReviewing}
           />

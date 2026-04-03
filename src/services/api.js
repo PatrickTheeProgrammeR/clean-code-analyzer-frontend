@@ -13,11 +13,11 @@ function errorMessageFromBody(data) {
   return null
 }
 
-export async function analyzeCode(code) {
+export async function analyzeCode(code, apiKey) {
   const response = await fetch(`${API_URL}/analyze-code`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ code }),
+    body: JSON.stringify({ code, api_key: apiKey }),
     signal: AbortSignal.timeout(AI_REQUEST_MS)
   })
   const data = await response.json().catch(() => ({}))
@@ -29,11 +29,11 @@ export async function analyzeCode(code) {
   return data
 }
 
-export async function reviewUserFix(originalCode, userFix) {
+export async function reviewUserFix(originalCode, userFix, apiKey) {
   const response = await fetch(`${API_URL}/review-user-fix`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ original_code: originalCode, user_fix: userFix }),
+    body: JSON.stringify({ original_code: originalCode, user_fix: userFix, api_key: apiKey }),
     signal: AbortSignal.timeout(AI_REQUEST_MS)
   })
   const data = await response.json().catch(() => ({}))

@@ -19,17 +19,22 @@ const EDITOR_OPTIONS = {
 
 function CodeInput({ onAnalyze, isLoading }) {
   const [code, setCode] = useState('')
+  const [apiKey, setApiKey] = useState('')
   const [githubUrl, setGithubUrl] = useState('')
   const [error, setError] = useState('')
   const [githubLoading, setGithubLoading] = useState(false)
   const fileInputRef = useRef(null)
 
   function handleSubmit() {
-    if (code.trim()) {
-      setError('')
-      onAnalyze(code)
-    } else {
+    const trimmedCode = code.trim()
+    const trimmedApiKey = apiKey.trim()
+    if (!trimmedApiKey) {
+      setError('Podaj swój klucz OpenAI API, aby uruchomić analizę.')
+    } else if (!trimmedCode) {
       setError('Wklej kod lub wczytaj plik z GitHub.')
+    } else {
+      setError('')
+      onAnalyze(trimmedCode, trimmedApiKey)
     }
   }
 
@@ -75,6 +80,18 @@ function CodeInput({ onAnalyze, isLoading }) {
   return (
     <div className="card code-input-card">
       <h2>Kod źródłowy Python</h2>
+      <p className="card-hint">
+        Podaj swój klucz OpenAI API. Klucz jest używany tylko do bieżącego żądania.
+      </p>
+      <input
+        type="password"
+        className="api-key-input"
+        value={apiKey}
+        onChange={(e) => setApiKey(e.target.value)}
+        placeholder="sk-..."
+        autoComplete="off"
+        spellCheck={false}
+      />
       <p className="card-hint">
         Wklej kod, wgraj plik <code>.py</code> lub podaj publiczny link do pliku w repozytorium
         GitHub (strona pliku lub <code>raw.githubusercontent.com</code>).
