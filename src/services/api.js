@@ -93,11 +93,11 @@ export async function reviewUserFix(originalCode, userFix, apiKey) {
   return data
 }
 
-export async function fetchGithubCode(url) {
+export async function fetchGithubCode(url, githubToken = '') {
   const response = await fetchApi('/fetch-github', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ url }),
+    body: JSON.stringify({ url, github_token: githubToken || null }),
     signal: AbortSignal.timeout(GITHUB_FETCH_MS)
   })
   const data = await response.json().catch(() => ({}))

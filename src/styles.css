@@ -242,6 +242,45 @@ h1 {
   box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.2);
 }
 
+.github-token-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  background: #f8fafc;
+  color: #1e293b;
+  margin-bottom: 12px;
+}
+
+.github-token-help {
+  margin-bottom: 8px;
+  padding: 10px 12px;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%);
+}
+
+.github-token-help p {
+  margin: 0;
+  color: #1e3a8a;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.github-token-security {
+  margin-top: 8px !important;
+  color: #0f766e !important;
+  font-weight: 600;
+}
+
+.github-token-input:focus {
+  outline: none;
+  border-color: #2b6cb0;
+  box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.2);
+}
+
 .btn-secondary {
   background: #edf2f7;
   color: #2d3748;

@@ -97,7 +97,8 @@ function App() {
       return
     }
 
-    setAuthInfo('Zalogowano pomyślnie.')
+    setAuthInfo('Zalogowano pomyślnie. Trwa odświeżanie widoku...')
+    window.location.reload()
   }
 
   async function handleSignUp() {

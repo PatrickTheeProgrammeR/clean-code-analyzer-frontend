@@ -29,6 +29,7 @@ function CodeInput({ onAnalyze, isLoading }) {
   const [apiKey, setApiKey] = useState('')
   const [analysisStandard, setAnalysisStandard] = useState('clean_code_pep8')
   const [githubUrl, setGithubUrl] = useState('')
+  const [githubToken, setGithubToken] = useState('')
   const [error, setError] = useState('')
   const [githubLoading, setGithubLoading] = useState(false)
   const fileInputRef = useRef(null)
@@ -79,7 +80,7 @@ function CodeInput({ onAnalyze, isLoading }) {
     setGithubLoading(true)
     setError('')
     try {
-      const { code: fetched } = await fetchGithubCode(url)
+      const { code: fetched } = await fetchGithubCode(url, githubToken.trim())
       if (fetched.length > MAX_CODE_LENGTH) {
         setError(
           `Pobrany plik jest za długi (${fetched.length}/${MAX_CODE_LENGTH} znaków). Wklej krótszy fragment kodu.`
@@ -132,7 +133,6 @@ function CodeInput({ onAnalyze, isLoading }) {
         Wklej kod, wgraj plik <code>.py</code> lub podaj publiczny link do pliku w repozytorium
         GitHub (strona pliku lub <code>raw.githubusercontent.com</code>).
       </p>
-      <p className="card-hint">Maksymalna długość kodu do analizy: 5000 znaków.</p>
 
       <div className="code-toolbar">
         <button
@@ -171,6 +171,26 @@ function CodeInput({ onAnalyze, isLoading }) {
           </button>
         </div>
       </div>
+      <div className="github-token-help">
+        <p>
+          GitHub -&gt; Settings -&gt; Developer Settings -&gt; Personal Access Tokens -&gt; Fine-grained tokens -&gt;
+          Generate new token -&gt; Repository access: wybierz konkretne repo -&gt; Permissions -&gt; Contents:
+          Read-only -&gt; Wygeneruj i skopiuj token.
+        </p>
+        <p className="github-token-security">
+          🔒 Token służy tylko do pobrania pliku i nie jest nigdzie zapisywany.
+        </p>
+      </div>
+      <input
+        type="password"
+        className="github-token-input"
+        value={githubToken}
+        onChange={(e) => setGithubToken(e.target.value)}
+        placeholder="Token GitHub (opcjonalnie, tylko dla prywatnych repo)"
+        autoComplete="off"
+        spellCheck={false}
+      />
+      <p className="card-hint">Maksymalna długość kodu do analizy: 5000 znaków.</p>
 
       {error ? (
         <div className="inline-error" role="alert">
