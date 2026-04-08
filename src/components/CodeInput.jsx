@@ -98,7 +98,11 @@ function CodeInput({ onAnalyze, isLoading }) {
 
   return (
     <div className="card code-input-card">
-      <h2>Kod źródłowy Python</h2>
+      <div className="code-input-icon-row" aria-hidden="true">
+        <img src="/favicon.svg" alt="" className="hero-logo" />
+        <img src="/favicon.svg" alt="" className="hero-logo" />
+        <img src="/favicon.svg" alt="" className="hero-logo" />
+      </div>
       <p className="card-hint">
         Podaj swój klucz OpenAI API. Klucz jest używany tylko do bieżącego żądania.
       </p>

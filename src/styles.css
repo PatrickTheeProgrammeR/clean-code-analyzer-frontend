@@ -131,6 +131,14 @@ h1 {
   color: #2b6cb0;
 }
 
+.code-input-icon-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
 .card h3 {
   font-size: 1rem;
   margin-top: 16px;
