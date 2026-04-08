@@ -158,7 +158,7 @@ function App() {
     setIsLoginFormVisible(true)
   }
 
-  async function handleAnalyze(code, apiKey) {
+  async function handleAnalyze(code, apiKey, analysisStandard) {
     setAnalysisError(null)
     setReviewError(null)
     setAnalysis(null)
@@ -166,7 +166,7 @@ function App() {
     setIsAnalyzing(true)
     setActiveApiKey(apiKey)
     try {
-      const result = await analyzeCode(code, apiKey)
+      const result = await analyzeCode(code, apiKey, analysisStandard)
       setOriginalCode(code)
       setAnalysis(result)
     } catch (e) {

@@ -51,11 +51,11 @@ export function isBackendConfigured() {
   return Boolean(API_URL)
 }
 
-export async function analyzeCode(code, apiKey) {
+export async function analyzeCode(code, apiKey, analysisStandard = 'clean_code_pep8') {
   const response = await fetchApi('/analyze-code', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ code, api_key: apiKey }),
+    body: JSON.stringify({ code, api_key: apiKey, analysis_standard: analysisStandard }),
     signal: AbortSignal.timeout(AI_REQUEST_MS)
   })
   const data = await response.json().catch(() => ({}))

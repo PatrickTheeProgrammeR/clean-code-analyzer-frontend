@@ -17,9 +17,16 @@ const EDITOR_OPTIONS = {
   smoothScrolling: true,
 }
 
+const ANALYSIS_STANDARDS = [
+  { value: 'clean_code', label: 'Clean Code' },
+  { value: 'pep8', label: 'PEP 8' },
+  { value: 'clean_code_pep8', label: 'Clean Code + PEP 8' },
+]
+
 function CodeInput({ onAnalyze, isLoading }) {
   const [code, setCode] = useState('')
   const [apiKey, setApiKey] = useState('')
+  const [analysisStandard, setAnalysisStandard] = useState('clean_code_pep8')
   const [githubUrl, setGithubUrl] = useState('')
   const [error, setError] = useState('')
   const [githubLoading, setGithubLoading] = useState(false)
@@ -34,7 +41,7 @@ function CodeInput({ onAnalyze, isLoading }) {
       setError('Wklej kod lub wczytaj plik z GitHub.')
     } else {
       setError('')
-      onAnalyze(trimmedCode, trimmedApiKey)
+      onAnalyze(trimmedCode, trimmedApiKey, analysisStandard)
     }
   }
 
@@ -92,6 +99,24 @@ function CodeInput({ onAnalyze, isLoading }) {
         autoComplete="off"
         spellCheck={false}
       />
+      <div className="analysis-standard-group" role="radiogroup" aria-label="Wybierz standard analizy">
+        {ANALYSIS_STANDARDS.map((standard) => {
+          const isActive = analysisStandard === standard.value
+          return (
+            <button
+              key={standard.value}
+              type="button"
+              className={`analysis-standard-option${isActive ? ' is-active' : ''}`}
+              onClick={() => setAnalysisStandard(standard.value)}
+              disabled={isLoading}
+              role="radio"
+              aria-checked={isActive}
+            >
+              {standard.label}
+            </button>
+          )
+        })}
+      </div>
       <p className="card-hint">
         Wklej kod, wgraj plik <code>.py</code> lub podaj publiczny link do pliku w repozytorium
         GitHub (strona pliku lub <code>raw.githubusercontent.com</code>).
