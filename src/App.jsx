@@ -1,12 +1,25 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import CodeInput from './components/CodeInput'
 import AnalysisResult from './components/AnalysisResult'
 import FixInput from './components/FixInput'
 import ReviewResult from './components/ReviewResult'
 import { analyzeCode, reviewUserFix, isBackendConfigured } from './services/api'
+import { supabase, isSupabaseConfigured } from './services/supabase'
 import './styles.css'
 
 function App() {
+  function validatePasswordForSignUp(value) {
+    const hasMinLength = value.length > 6
+    const hasLetter = /[A-Za-z]/.test(value)
+    const hasNumber = /\d/.test(value)
+
+    if (!hasMinLength || !hasLetter || !hasNumber) {
+      return 'Hasło musi mieć więcej niż 6 znaków i zawierać litery oraz cyfry.'
+    }
+
+    return null
+  }
+
   const [analysis, setAnalysis] = useState(null)
   const [review, setReview] = useState(null)
   const [originalCode, setOriginalCode] = useState('')
@@ -15,6 +28,135 @@ function App() {
   const [isReviewing, setIsReviewing] = useState(false)
   const [analysisError, setAnalysisError] = useState(null)
   const [reviewError, setReviewError] = useState(null)
+  const [user, setUser] = useState(null)
+  const [authError, setAuthError] = useState(null)
+  const [authInfo, setAuthInfo] = useState(null)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isAuthSubmitting, setIsAuthSubmitting] = useState(false)
+  const [isLoginFormVisible, setIsLoginFormVisible] = useState(false)
+
+  useEffect(() => {
+    if (!supabase) return undefined
+
+    let mounted = true
+
+    supabase.auth.getSession().then(({ data, error }) => {
+      if (!mounted) return
+      if (error) {
+        setAuthError('Nie udało się pobrać sesji użytkownika.')
+        return
+      }
+      setUser(data.session?.user ?? null)
+    })
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!mounted) return
+      setUser(session?.user ?? null)
+    })
+
+    return () => {
+      mounted = false
+      subscription.unsubscribe()
+    }
+  }, [])
+
+  async function handleSignIn(event) {
+    event.preventDefault()
+
+    if (!supabase) {
+      setAuthError(
+        'Logowanie jest chwilowo niedostępne. Ustaw VITE_SUPABASE_URL oraz VITE_SUPABASE_ANON_KEY.',
+      )
+      return
+    }
+
+    if (!email.trim()) {
+      setAuthError('Podaj adres e-mail, aby się zalogować.')
+      return
+    }
+    if (!password) {
+      setAuthError('Podaj hasło.')
+      return
+    }
+
+    setAuthError(null)
+    setAuthInfo(null)
+    setIsAuthSubmitting(true)
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password,
+    })
+    setIsAuthSubmitting(false)
+
+    if (error) {
+      setAuthError('Nie udało się zalogować. Sprawdź e-mail i hasło.')
+      return
+    }
+
+    setAuthInfo('Zalogowano pomyślnie.')
+  }
+
+  async function handleSignUp() {
+    if (!supabase) {
+      setAuthError(
+        'Logowanie jest chwilowo niedostępne. Ustaw VITE_SUPABASE_URL oraz VITE_SUPABASE_ANON_KEY.',
+      )
+      return
+    }
+    if (!email.trim()) {
+      setAuthError('Podaj adres e-mail, aby utworzyć konto.')
+      return
+    }
+    if (!password) {
+      setAuthError('Podaj hasło.')
+      return
+    }
+    const passwordValidationError = validatePasswordForSignUp(password)
+    if (passwordValidationError) {
+      setAuthError(passwordValidationError)
+      return
+    }
+
+    setAuthError(null)
+    setAuthInfo(null)
+    setIsAuthSubmitting(true)
+
+    const { error } = await supabase.auth.signUp({
+      email: email.trim(),
+      password,
+    })
+    setIsAuthSubmitting(false)
+
+    if (error) {
+      setAuthError('Nie udało się utworzyć konta. Spróbuj ponownie.')
+      return
+    }
+
+    setAuthInfo('Konto utworzone. Sprawdź e-mail i potwierdź rejestrację, a następnie zaloguj się.')
+  }
+
+  async function handleSignOut() {
+    if (!supabase) return
+
+    setAuthError(null)
+    setAuthInfo(null)
+    const { error } = await supabase.auth.signOut()
+    if (error) {
+      setAuthError('Nie udało się wylogować.')
+      return
+    }
+    setAuthInfo('Wylogowano.')
+  }
+
+  function handleShowLogin() {
+    setAuthError(null)
+    setAuthInfo(null)
+    setIsLoginFormVisible(true)
+  }
 
   async function handleAnalyze(code, apiKey) {
     setAnalysisError(null)
@@ -67,8 +209,60 @@ function App() {
 
   return (
     <div className="container">
-      <h1>Clean Code Analyzer</h1>
-      <p className="subtitle">Analizuj swój kod Python pod kątem zasad Clean Code</p>
+      <header className="hero-header">
+        <div className="hero-title-row">
+          <img src="/favicon.svg" alt="" className="hero-logo" />
+          <h1 className="hero-title">Clean Code Analyzer</h1>
+          <img src="/favicon.svg" alt="" className="hero-logo" />
+        </div>
+        <p className="subtitle hero-subtitle">Analizuj swój kod Python pod kątem zasad Clean Code</p>
+      </header>
+      {!isLoginFormVisible ? (
+        <div className="auth-row">
+          <button type="button" className="btn-secondary" onClick={handleShowLogin}>
+            Zaloguj
+          </button>
+          {user ? (
+            <>
+              <span className="auth-status">{`Zalogowano jako: ${user.email ?? user.id}`}</span>
+              <button type="button" className="btn-secondary" onClick={handleSignOut}>
+                Wyloguj
+              </button>
+            </>
+          ) : null}
+        </div>
+      ) : (
+        <form className="auth-row" onSubmit={handleSignIn}>
+          <input
+            type="email"
+            className="auth-email-input"
+            placeholder="Podaj e-mail do logowania"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={!isSupabaseConfigured || isAuthSubmitting}
+          />
+          <input
+            type="password"
+            className="auth-email-input"
+            placeholder="Podaj hasło"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            disabled={!isSupabaseConfigured || isAuthSubmitting}
+          />
+          <button type="submit" className="btn-secondary" disabled={!isSupabaseConfigured || isAuthSubmitting}>
+            {isAuthSubmitting ? 'Trwa logowanie...' : 'Zaloguj'}
+          </button>
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={handleSignUp}
+            disabled={!isSupabaseConfigured || isAuthSubmitting}
+          >
+            Załóż konto
+          </button>
+          {user ? <span className="auth-status">{`Zalogowano jako: ${user.email ?? user.id}`}</span> : null}
+        </form>
+      )}
 
       {import.meta.env.PROD && !isBackendConfigured() ? (
         <div className="banner-error" role="alert">
@@ -80,6 +274,18 @@ function App() {
       {analysisError ? (
         <div className="banner-error" role="alert">
           {analysisError}
+        </div>
+      ) : null}
+
+      {authError ? (
+        <div className="banner-error" role="alert">
+          {authError}
+        </div>
+      ) : null}
+
+      {authInfo ? (
+        <div className="banner-info" role="status">
+          {authInfo}
         </div>
       ) : null}
 

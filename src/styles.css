@@ -28,10 +28,88 @@ h1 {
   margin-bottom: 24px;
 }
 
+.hero-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.hero-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.hero-logo {
+  width: 34px;
+  height: 34px;
+  filter: drop-shadow(0 3px 8px rgba(126, 20, 255, 0.35));
+}
+
+.hero-title {
+  font-size: clamp(2rem, 3.6vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  margin: 0;
+  background: linear-gradient(90deg, #2b6cb0 0%, #7e14ff 45%, #2b6cb0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 8px 28px rgba(43, 108, 176, 0.18);
+}
+
+.hero-subtitle {
+  margin-top: 10px;
+  margin-bottom: 0;
+  font-size: 1.05rem;
+  color: #475569;
+}
+
+.auth-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.auth-status {
+  color: #475569;
+  font-size: 0.95rem;
+}
+
+.auth-email-input {
+  width: 280px;
+  max-width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+.auth-email-input:focus {
+  outline: none;
+  border-color: #2b6cb0;
+  box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.2);
+}
+
 .banner-error {
   background: #fff5f5;
   border: 1px solid #fc8181;
   color: #9b2c2c;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.banner-info {
+  background: #eff6ff;
+  border: 1px solid #93c5fd;
+  color: #1e3a8a;
   padding: 12px 16px;
   border-radius: 8px;
   margin-bottom: 16px;
