@@ -73,9 +73,15 @@ h1 {
   flex-wrap: wrap;
 }
 
+.auth-row-logged {
+  justify-content: space-between;
+  flex-wrap: nowrap;
+}
+
 .auth-status {
   color: #475569;
-  font-size: 0.95rem;
+  font-size: 1.05rem;
+  font-style: normal;
 }
 
 .auth-email-input {

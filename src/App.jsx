@@ -219,10 +219,12 @@ function App() {
         <p className="subtitle hero-subtitle">Analizuj swój kod Python pod kątem zasad Clean Code</p>
       </header>
       {!isLoginFormVisible ? (
-        <div className="auth-row">
-          <button type="button" className="btn-secondary" onClick={handleShowLogin}>
-            Zaloguj
-          </button>
+        <div className={`auth-row${user ? ' auth-row-logged' : ''}`}>
+          {!user ? (
+            <button type="button" className="btn-secondary" onClick={handleShowLogin}>
+              Zaloguj
+            </button>
+          ) : null}
           {user ? (
             <>
               <span className="auth-status">{`Zalogowano jako: ${user.email ?? user.id}`}</span>
