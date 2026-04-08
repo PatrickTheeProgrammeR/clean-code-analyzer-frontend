@@ -291,6 +291,18 @@ function App() {
 
       <CodeInput onAnalyze={handleAnalyze} isLoading={isAnalyzing} />
 
+      {isAnalyzing && (
+        <section className="analysis-loading-card" aria-live="polite" aria-busy="true">
+          <div className="analysis-loading-header">
+            <span className="analysis-spinner" aria-hidden="true" />
+            <p>Trwa analiza kodu...</p>
+          </div>
+          <div className="analysis-skeleton-line analysis-skeleton-line-wide" />
+          <div className="analysis-skeleton-line" />
+          <div className="analysis-skeleton-line analysis-skeleton-line-short" />
+        </section>
+      )}
+
       {analysis && (
         <AnalysisResult result={analysis} />
       )}

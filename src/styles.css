@@ -290,6 +290,70 @@ h1 {
   justify-content: flex-end;
 }
 
+.analysis-loading-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.analysis-loading-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  color: #334155;
+  font-weight: 600;
+}
+
+.analysis-loading-header p {
+  margin: 0;
+}
+
+.analysis-spinner {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e1;
+  border-top-color: #2b6cb0;
+  animation: analysis-spin 0.8s linear infinite;
+}
+
+.analysis-skeleton-line {
+  height: 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #e2e8f0 0%, #f8fafc 45%, #e2e8f0 100%);
+  background-size: 220% 100%;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+  margin-bottom: 10px;
+}
+
+.analysis-skeleton-line-wide {
+  width: 92%;
+}
+
+.analysis-skeleton-line-short {
+  width: 66%;
+  margin-bottom: 0;
+}
+
+@keyframes analysis-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes skeleton-pulse {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: -100% 50%;
+  }
+}
+
 textarea {
   width: 100%;
   padding: 12px;
