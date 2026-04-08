@@ -25,10 +25,20 @@ function requireApiUrl() {
 function errorMessageFromBody(data) {
   const detail = data?.detail
   const err = data?.error
+  const maxLengthPattern = /at most\s+(\d+)\s+characters/i
+  const toFriendlyLengthMessage = (msg) => {
+    if (typeof msg !== 'string') return null
+    const match = msg.match(maxLengthPattern)
+    if (!match) return null
+    return `Kod jest za długi. Maksymalna długość to ${match[1]} znaków.`
+  }
   if (typeof detail === 'string') return detail
   if (typeof err === 'string') return err
   if (Array.isArray(detail)) {
-    return detail.map((d) => d.msg || String(d)).join(', ')
+    const messages = detail.map((d) => d.msg || String(d))
+    const friendlyLength = messages.map(toFriendlyLengthMessage).find(Boolean)
+    if (friendlyLength) return friendlyLength
+    return messages.join(', ')
   }
   return null
 }

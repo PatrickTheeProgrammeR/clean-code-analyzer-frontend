@@ -22,6 +22,7 @@ const ANALYSIS_STANDARDS = [
   { value: 'pep8', label: 'PEP 8' },
   { value: 'clean_code_pep8', label: 'Clean Code + PEP 8' },
 ]
+const MAX_CODE_LENGTH = 5000
 
 function CodeInput({ onAnalyze, isLoading }) {
   const [code, setCode] = useState('')
@@ -39,6 +40,10 @@ function CodeInput({ onAnalyze, isLoading }) {
       setError('Podaj swój klucz OpenAI API, aby uruchomić analizę.')
     } else if (!trimmedCode) {
       setError('Wklej kod lub wczytaj plik z GitHub.')
+    } else if (trimmedCode.length > MAX_CODE_LENGTH) {
+      setError(
+        `Kod jest za długi (${trimmedCode.length}/${MAX_CODE_LENGTH} znaków). Skróć fragment do maksymalnie ${MAX_CODE_LENGTH} znaków.`
+      )
     } else {
       setError('')
       onAnalyze(trimmedCode, trimmedApiKey, analysisStandard)
@@ -75,6 +80,12 @@ function CodeInput({ onAnalyze, isLoading }) {
     setError('')
     try {
       const { code: fetched } = await fetchGithubCode(url)
+      if (fetched.length > MAX_CODE_LENGTH) {
+        setError(
+          `Pobrany plik jest za długi (${fetched.length}/${MAX_CODE_LENGTH} znaków). Wklej krótszy fragment kodu.`
+        )
+        return
+      }
       setCode(fetched)
       setGithubUrl('')
     } catch (e) {
@@ -121,6 +132,7 @@ function CodeInput({ onAnalyze, isLoading }) {
         Wklej kod, wgraj plik <code>.py</code> lub podaj publiczny link do pliku w repozytorium
         GitHub (strona pliku lub <code>raw.githubusercontent.com</code>).
       </p>
+      <p className="card-hint">Maksymalna długość kodu do analizy: 5000 znaków.</p>
 
       <div className="code-toolbar">
         <button

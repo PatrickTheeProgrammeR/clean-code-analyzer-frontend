@@ -1,9 +1,20 @@
-function AnalysisResult({ result }) {
+function AnalysisResult({ result, sourceCode = '' }) {
   if (!result) return null
 
   const issues = Array.isArray(result.issues) ? result.issues : []
   const summary =
     typeof result.summary === 'string' ? result.summary.trim() : ''
+  const sourceLines = typeof sourceCode === 'string' ? sourceCode.split(/\r?\n/) : []
+
+  function getLinePreview(lineNumber) {
+    if (!Number.isInteger(lineNumber) || lineNumber <= 0) return null
+    const lineText = sourceLines[lineNumber - 1]
+    if (typeof lineText !== 'string') return null
+    return {
+      lineNumber,
+      text: lineText.trim() || '(pusta linia)',
+    }
+  }
 
   return (
     <div className="card">
@@ -28,17 +39,21 @@ function AnalysisResult({ result }) {
           uruchomić analizę ponownie.
         </p>
       ) : (
-        issues.map((issue, index) => (
-          <div key={index} className="issue">
-            <p>
-              <strong>
-                {issue.line > 0 ? `Linia ${issue.line}` : 'Cały plik / ogólne'}
-              </strong>
-            </p>
-            <p>Problem: {issue.problem}</p>
-            <p>Sugestia: {issue.suggestion}</p>
-          </div>
-        ))
+        issues.map((issue, index) => {
+          const linePreview = getLinePreview(issue.line)
+          return (
+            <div key={index} className="issue">
+              <p className="issue-line-row">
+                <strong>
+                  {issue.line > 0 ? `Linia ${issue.line}` : 'Cały plik / ogólne'}
+                </strong>
+                {linePreview ? <code className="issue-line-code">{linePreview.text}</code> : null}
+              </p>
+              <p>Problem: {issue.problem}</p>
+              <p>Sugestia: {issue.suggestion}</p>
+            </div>
+          )
+        })
       )}
     </div>
   )

@@ -304,7 +304,7 @@ function App() {
       )}
 
       {analysis && (
-        <AnalysisResult result={analysis} />
+        <AnalysisResult result={analysis} sourceCode={originalCode} />
       )}
 
       {analysis && (

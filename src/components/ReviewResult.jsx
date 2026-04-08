@@ -17,7 +17,7 @@ function ReviewResult({ result }) {
       <p>{result.comparison}</p>
 
       <h3>Najlepsze rozwiązanie AI:</h3>
-      <pre className="code-block">{result.best_solution}</pre>
+      <pre className="review-solution-block">{result.best_solution}</pre>
 
       <h3>Dlaczego to najlepsze rozwiązanie:</h3>
       <p>{result.best_solution_explanation}</p>
