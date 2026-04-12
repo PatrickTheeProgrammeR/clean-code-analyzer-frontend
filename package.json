@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
+    "format:check": "prettier --check vite.config.js eslint.config.js src/setupTests.js src/App.test.jsx src/index.css .prettierrc",
+    "test": "vitest run",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -22,6 +24,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.0",
@@ -29,6 +33,9 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
-    "vite": "^8.0.0"
+    "jsdom": "^26.1.0",
+    "prettier": "^3.6.2",
+    "vite": "^8.0.0",
+    "vitest": "^3.2.4"
   }
 }
